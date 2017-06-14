@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class ShowLives : MonoBehaviour {
 
+	public static ShowLives Instance;
+
 	[SerializeField]
 	private int numberOfLives;
 
@@ -19,13 +21,18 @@ public class ShowLives : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Instance = this;
 		lives = new List<GameObject> ();
 		for (int lifeIndex = 0; lifeIndex < this.numberOfLives; lifeIndex++) {
 			GameObject life = Instantiate (lifePrefab, this.gameObject.transform);
 			lives.Add (life);
 		}
 	}
-	
+
+	public int Getlive ()
+	{
+		return this.numberOfLives;
+	}
 	public void looseLife() {
 		this.numberOfLives -= 1;
 		GameObject life = this.lives [this.lives.Count - 1];
@@ -35,7 +42,7 @@ public class ShowLives : MonoBehaviour {
 		if (this.numberOfLives == 0) {
 			this.scoreText.SetActive (false);
 			this.gameOverGroup.SetActive (true);
-			this.finalScoreText.GetComponent<Text> ().text = "Your score was " + this.scoreText.GetComponent<ShowScore> ().getScore ();
+			this.finalScoreText.GetComponent<Text> ().text = "Điểm của bạn " + this.scoreText.GetComponent<ShowScore> ().getScore ();
 		}
 	}
 }

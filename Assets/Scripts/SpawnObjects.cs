@@ -2,26 +2,44 @@
 using System.Collections;
 
 public class SpawnObjects : MonoBehaviour {
-
-	[SerializeField]
-	private GameObject prefabToSpawn;
-
+	public static SpawnObjects Instance;
 	[SerializeField]
 	private float spawnInterval, objectMinX, objectMaxX, objectY;
 
 	[SerializeField]
-	private Sprite[] objectSprites;
+	private GameObject[] objectSprites;
+
+
 
 	// Use this for initialization
 	void Start () {
-		InvokeRepeating ("spawnObject", this.spawnInterval, this.spawnInterval);
+		Instance = this;
+		InvokeRepeating ("spawnObject", 1, this.spawnInterval);
+	}
+
+	void Update()
+	{
+		if (ShowLives.Instance.Getlive () <= 0) {
+			GameObject rootOb = GameObject.FindGameObjectWithTag ("packman");
+			Destroy (rootOb);
+			CancelInvoke ("spawnObject");
+		}
+	}
+
+	private int curSpawnNum = -1;
+
+	public int GetCurrentRandomNum() 
+	{
+		return curSpawnNum;
 	}
 
 	private void spawnObject() {
-		GameObject newObject = Instantiate (this.prefabToSpawn);
+		curSpawnNum = Random.Range (0, this.objectSprites.Length);
+		PlayerPrefs.SetInt ("random", curSpawnNum);
+		GameObject newObject = Instantiate (objectSprites [curSpawnNum]);
 		newObject.transform.position = new Vector2 (Random.Range(this.objectMinX, this.objectMaxX), this.objectY);
 
-		Sprite objectSprite = objectSprites [Random.Range (0, this.objectSprites.Length)];
-		newObject.GetComponent<SpriteRenderer> ().sprite = objectSprite;
+		//GameObject objectSprite = objectSprites [Random.Range (0, this.objectSprites.Length)];
+		//newObject = objectSprite;
 	}
 }

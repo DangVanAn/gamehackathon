@@ -15,6 +15,14 @@ public class ShowScore : MonoBehaviour {
 	public void incrementScore(int incrementValue) {
 		this.score += incrementValue;
 		GetComponent<Text> ().text = "Score: " + this.score;
+		if (PlayerPrefs.GetInt ("highscore") < this.score) {
+			PlayerPrefs.SetInt ("highscore", this.score);
+		}
+	}
+
+	public void decrementScore(int incrementValue) {
+		this.score -= incrementValue;
+		GetComponent<Text> ().text = "Score: " + this.score;
 	}
 
 	public int getScore() {
